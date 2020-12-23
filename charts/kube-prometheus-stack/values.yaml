@@ -2001,9 +2001,6 @@ prometheus:
     ## port to 2379 and allow etcd scraping provided it is running on all Kubernetes master nodes
     ##
     additionalScrapeConfigs:
-      - job_name: 'traefik'
-        static_configs:
-        - targets: ['172.20.112.44:80']
     # - job_name: kube-etcd
     #   kubernetes_sd_configs:
     #     - role: node
