@@ -2001,6 +2001,10 @@ prometheus:
     ## port to 2379 and allow etcd scraping provided it is running on all Kubernetes master nodes
     ##
     additionalScrapeConfigs:
+      - job_name: custom-app-endpoint-check
+        static_configs:
+        - targets: ['sample-web-app-nginx.default.svc.cluster.local:80']
+        
     # - job_name: kube-etcd
     #   kubernetes_sd_configs:
     #     - role: node
