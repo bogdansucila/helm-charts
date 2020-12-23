@@ -2002,7 +2002,7 @@ prometheus:
     ##
     additionalScrapeConfigs:
       - job_name: 'blackbox'
-  #      metrics_path: /openapi.json
+        metrics_path: /probe
         params:
           module: [http_2xx]  # Look for a HTTP 200 response.
         static_configs:
