@@ -2004,7 +2004,7 @@ prometheus:
       - job_name: custom-app-endpoint-check
         metrics_path: /openapi.json
         static_configs:
-        - targets: ['sample-web-app-nginx.default.svc.cluster.local:8080']
+        - targets: ['sample-web-app-swaggerui.default.svc.cluster.local:8080']
         
     # - job_name: kube-etcd
     #   kubernetes_sd_configs:
