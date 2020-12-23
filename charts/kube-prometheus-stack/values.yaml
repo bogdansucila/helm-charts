@@ -80,12 +80,17 @@ defaultRules:
 ## Provide custom recording or alerting rules to be deployed into the cluster.
 ##
 additionalPrometheusRulesMap: {}
-#  rule-name:
-#    groups:
-#    - name: my_group
-#      rules:
-#      - record: my_record
-#        expr: 100 * my_record
+  rule-name:
+    groups:
+    - name: blackbox_http_monitors
+      rules:
+      - alert: EndpointDown
+        expr: probe_success == 0
+        for: 10s
+        labels:
+          severity: "critical"
+        annotations:
+          summary: "Endpoint {{ $labels.instance }} down"
 
 ##
 global:
