@@ -2002,6 +2002,7 @@ prometheus:
     ##
     additionalScrapeConfigs:
       - job_name: custom-app-endpoint-check
+        metrics_path: /
         static_configs:
         - targets: ['sample-web-app-nginx.default.svc.cluster.local:80']
         
