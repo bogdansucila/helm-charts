@@ -2001,10 +2001,18 @@ prometheus:
     ## port to 2379 and allow etcd scraping provided it is running on all Kubernetes master nodes
     ##
     additionalScrapeConfigs:
-      - job_name: custom-app-endpoint-check
+      - job_name: 'blackbox'
         metrics_path: /openapi.json
+        params:
+        module: [http_2xx]  # Look for a HTTP 200 response.
         static_configs:
-        - targets: ['sample-web-app-swaggerui.default.svc.cluster.local:8080']
+        - targets:
+          - sample-web-app-swaggerui.default.svc.cluster.local:8080 # Target to probe with http on port 8080.
+        relabel_configs:
+        - source_labels: [__address__]
+          target_label: __param_target
+        - source_labels: [__param_target]
+          target_label: instance
         
     # - job_name: kube-etcd
     #   kubernetes_sd_configs:
