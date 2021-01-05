@@ -14,3 +14,13 @@ rules:
     resourceNames: ["{{ template "prometheus-cloudwatch-exporter.fullname" . }}"]
     verbs: ["get"]
 {{- end }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: annotate-sa
+  namespace: monitoring
+rules:
+  - apiGroups: [""]
+    resources: ["serviceaccounts","pods"]
+    verbs: ["get","list","patch",'delete"]
