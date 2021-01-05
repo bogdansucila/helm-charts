@@ -1,0 +1,39 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: "{{ .Release.Name }}"
+  labels:
+    app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
+    app.kubernetes.io/instance: {{ .Release.Name | quote }}
+    app.kubernetes.io/version: {{ .Chart.AppVersion }}
+    helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+  annotations:
+    # This is what defines this resource as a hook. Without this line, the
+    # job is considered part of the release.
+    "helm.sh/hook": post-install
+    "helm.sh/hook-weight": "-5"
+    "helm.sh/hook-delete-policy": hook-succeeded
+spec:
+  template:
+    metadata:
+      name: "{{ .Release.Name }}"
+      labels:
+        app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
+        app.kubernetes.io/instance: {{ .Release.Name | quote }}
+        helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    spec:
+      serviceAccountName: internal-kubectl
+      containers:
+      - name: annotate-iam
+        image: bitnami/kubectl
+        env:
+          - name: IAM_ROLE
+            valueFrom:
+              secretKeyRef:
+                name: prometheus-iam-role-arn
+                key: arn 
+        command:
+         - "bin/bash"
+         - "-c"
+         - "kubectl annotate serviceaccount -n monitoring prometheus-cloudwatch-exporter eks.amazonaws.com/role-arn=${IAM_ROLE} --overwrite && kubectl delete pod -l app=prometheus-cloudwatch-exporter"
+      restartPolicy: Never
